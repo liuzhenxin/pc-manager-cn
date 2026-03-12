@@ -1,0 +1,58 @@
+{
+  "id": "",
+  "name": "",
+  "font_family": "iconfont",
+  "css_prefix_text": "icon-",
+  "description": "",
+  "glyphs": [
+    {
+      "icon_id": "1001663",
+      "name": "个人信息",
+      "font_class": "gerenxinxi",
+      "unicode": "e60e",
+      "unicode_decimal": 58894
+    },
+    {
+      "icon_id": "2675009",
+      "name": "首页",
+      "font_class": "shouye",
+      "unicode": "e62e",
+      "unicode_decimal": 58926
+    },
+    {
+      "icon_id": "11661949",
+      "name": "CAS",
+      "font_class": "CAS",
+      "unicode": "e651",
+      "unicode_decimal": 58961
+    },
+    {
+      "icon_id": "12316652",
+      "name": "角色管理",
+      "font_class": "jiaoseguanli",
+      "unicode": "e61d",
+      "unicode_decimal": 58909
+    },
+    {
+      "icon_id": "15433493",
+      "name": "密码机",
+      "font_class": "mimaji",
+      "unicode": "e6ab",
+      "unicode_decimal": 59051
+    },
+    {
+      "icon_id": "21445763",
+      "name": "签名验签设备",
+      "font_class": "qianmingyanqianshebei",
+      "unicode": "e68d",
+      "unicode_decimal": 59021
+    },
+    {
+      "icon_id": "26721016",
+      "name": "KMS管理",
+      "font_class": "KMSguanli",
+      "unicode": "e6fa",
+      "unicode_decimal": 59130
+    }
+  ]
+}

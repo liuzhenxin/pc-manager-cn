@@ -1,0 +1,296 @@
+<template>
+  <div class="navItem" v-loading="loading">
+    <el-card>
+      <div class="boxStyle" style=" margin-top:10px;height:auto">
+        <span>(1)请登录半数以上管理员,以满足恢复所需权限</span><br>
+        <span>(2)密钥恢复过程会破坏密码设备内当前的密钥数据。请谨慎操作.</span>
+      </div>
+      <!-- <keyLogo @keyNum="keyNum"></keyLogo> -->
+      <el-row style="margin-top:20px;">
+        <el-col :span="12">
+          <div style="margin-top:0px;color:#409EFF;border-left: 3px solid #4f7be2" class="boxStyle">读取管理员数: {{readCount}}</div>
+        </el-col>
+      </el-row>
+      <div class="fontStyle" style="margin-bottom:20px;margin-top:20px;"> </div>
+      <el-button style="margin-left:0px;border:0" type="" size="mini">管理员数：</el-button>
+      <el-select v-model="adminCount" placeholder="管理员数目" style="width:5%">
+        <el-option :label="adminCount" :value="adminCount"></el-option>
+      </el-select>
+      <el-button style="margin-left:10px" type="primary" @click="readSharePush()" size="mini" icon="el-icon-key" plain>读取密钥</el-button>
+      <el-upload :disabled=!readOrNot style="margin-top: 20px;margin-left: 10px" class="upload-demo" ref="upload" action="" :show-file-list="true" :on-progress="handleProgress" :on-preview="handlePreview" :on-exceed="handleExceed" :on-change="changeAction" multiple :limit="1" :headers="MyHeader" :file-list="fileList" :auto-upload="false" :on-success="handleSuccess">
+        <el-button :disabled=!readOrNot slot="trigger" size="small" type="success">上传备份文件</el-button>
+        <template #tip>
+          <div v-if="progressVisible">
+            <el-progress :percentage="progressPercent" />
+          </div>
+        </template>
+      </el-upload>
+      <el-button :disabled=!readOrNot style="margin-left: 10px;margin-top: 10px;" size="small" type="primary" @click="addCopyKey">恢复密钥文件</el-button>
+
+      <el-dialog title="读取密钥" :visible.sync="readSharePushDialog" width="30%">
+        <div style="margin-top:20px;padding-left:20%">
+          <span class="titleLabel" style="width:75px">PIN口令:</span>
+          <el-input style="width:60%;margin-left:10px" type="password" v-model="pinContent" placeholder="请输入PIN口令" class="searchInputClass">
+            <!-- <i slot="suffix" :class="[flag1 ? 'el-icon-minus' : 'el-icon-view']" style="margin-top: 8px; font-size: 18px" autocomplete="auto" @click="flag1 = !flag1" ></i> -->
+          </el-input>
+          <!-- <el-button style="margin-left:10px" type="primary" @click="addAdmin()" size="mini"><i class="el-icon-plus iconRight"></i>添加管理员</el-button> -->
+        </div>
+        <span slot="footer" class="dialog-footer">
+                    <el-button @click="readSharePushDialog = false" size="mini">取消</el-button>
+          <!-- <el-button type="success" @click="initFactory('否')" size="medium">否</el-button> -->
+                    <el-button type="primary" @click="readShare()" size="mini">确定</el-button>
+                </span>
+      </el-dialog>
+
+    </el-card>
+  </div>
+</template>
+
+
+<script>
+import keyLogo from "./keyLogo.vue"
+export default {
+  inject: ["reload"],
+  components: {
+    keyLogo
+  },
+
+  data() {
+    return {
+      loading: false,
+      showFile: false,
+      isUpload: true,
+      MyHeader: { Authorization: "" },
+      isLogin: true,
+      pinContent: "",
+      fileList: [],
+      addminKeyNum: 0,
+      readCount: 0,
+      adminCount: "",
+      readSharePushDialog: false,
+      readOrNot: true,
+      shares: "",
+      fileStore: "",
+      actionUrl: "",
+      progressVisible: false,
+      progressPercent: 0
+    }
+  },
+  created() {
+    this.MyHeader.Authorization =
+      window.sessionStorage.getItem("Authorization")
+    this.loading = true
+    setTimeout(() => {
+      this.loading = false
+    }, 1000),
+      this.getEnumUser()
+  },
+  mounted() {
+    // this.getStatus();
+  },
+  methods: {
+    //获取已登录的管理员数
+    getEnumUser() {
+      this.$commonJs.
+      getMethodData(this.$url.GetEnumUser,"Post",{})
+        .then((res)=>{
+          if (res.data.code == 100000) {
+            this.adminCount = res.data.data.managerRegister;
+          }
+        })
+    },
+    readSharePush() {
+      if (this.readCount == parseInt(this.adminCount / 2 + 1)) {
+        this.$message.success("密钥读取完成，请上传备份文件")
+      } else {
+        this.readSharePushDialog = true
+      }
+    },
+    readShare() {
+      if (this.pinContent == "") {
+        this.$message.success("口令不能为空！")
+      } else {
+        this.loading = true
+        this.$commonJs
+          .getMethodData(this.$url.readShare, "POST", {
+            passwd: this.pinContent,
+            readCount: this.readCount,
+            adminCount: this.adminCount
+          })
+          .then((res) => {
+            this.readSharePushDialog = false
+            if (res.data.code == 100000) {
+              this.shares += res.data.data + ","
+              this.readCount++
+              this.pinContent = ""
+              this.$message.success("读取成功！")
+              if (
+                this.readCount == parseInt(this.adminCount / 2 + 1)
+              ) {
+                this.readOrNot = true
+                this.actionUrl = this.$url.SvsRestoryKey
+              }
+            } else if (res.data.code != 800000) {
+              this.$message.error(res.data.msg)
+            }
+            // this.showFile = false;
+            this.loading = false
+          })
+      }
+    },
+    addCopyKey() {
+      if (this.fileStore == "") {
+        this.$message.success("文件不能为空！")
+      } else {
+        this.loading = true
+        setTimeout(function() {
+          // 这里编写需要等待后执行的代码
+          console.log("等待了5秒后执行的代码");
+        }, 5000); // 等待5秒
+        this.actionUrl = this.$url.SvsRestoryKey
+        console.log(this.actionUrl + "------------")
+        let formdata = new FormData()
+        formdata.append("file", this.fileStore)
+        formdata.append("m", this.adminCount)
+        this.$http
+          .post(this.actionUrl, formdata, {
+            headers: {
+              "Content-Type": "multipart/form-data"
+            }
+          })
+          .then((res) => {
+            if (res.data.code == 100000) {
+              this.$alert("恢复密钥成功.", "提示", {
+                confirmButtonText: "确定",
+                type: "success"
+              }).then(() => {
+                this.reload()
+              })
+            } else if (res.data.code != 800000) {
+              this.$message.error(res.data.msg)
+            }
+            // this.showFile = false;
+            this.loading = false
+          })
+      }
+    },
+    handleProgress(event,file){
+      console.log(event)
+      this.progressPercent = event.percent;
+      this.progressVisible = true;
+    },
+    handleSuccess(file) {
+      console.log(file)
+      if (file.code == 100000) {
+        //this.showFile = true
+        // this.isUpload = false;
+        // this.addCopyKey();
+        //this.isNext = 2
+        this.$message.success("上传成功!")
+      } else {
+        this.$nextTick(() => {
+          // this.showFile = false;
+          // this.isUpload = true;
+        })
+        this.fileList = []
+        this.$message.error(file.msg)
+      }
+    },
+    getRecoveryLogin() {
+      this.$router.push({
+        name: "userLoginList",
+        query: {
+          type: 2
+        }
+      })
+    },
+    keyNum(data) {
+      console.log(data, "keyNum")
+      this.addminKeyNum = data
+      // this.getStatus();
+    },
+    async getStatus() {
+      let that = this
+      await this.$commonJs
+        .getMethodData(this.$url.HsmGetUserinfo, "POST", {
+          num: this.addminKeyNum
+        })
+        .then((res) => {
+          if (res.data.code == 100000) {
+            that.isLogin = res.data.data
+            this.loading = false
+          } else if (res.data.code != 800000) {
+            if (res.data.data == false) {
+              that.meetPermissions =
+                "未满足恢复密钥权限，请先登录"
+            }
+            that.$message.error(res.data.msg)
+            this.loading = false
+          } else {
+            this.loading = false
+          }
+        })
+    },
+    submitUpload() {
+      this.$refs.upload.submit()
+    },
+    changeAction(file, fileList) {
+      //this.fileStore = file.raw
+      this.fileList = fileList
+      this.fileStore = fileList[0].raw
+    },
+    handleSuccess(file) {
+      console.log(file, "file")
+      // this.$nextTick(() => {
+      //     this.$commonJs.getCloseLoading();
+      // });
+      if (file.code == 100000) {
+        this.$message.success("上传成功!")
+        this.showFile = true
+        this.$router.push("/applicationCertList")
+      }
+      // else {
+      //     this.fileList = [];
+      //     this.$message.error(file.msg);
+      //     this.showFile = false;
+      // }
+      this.loading = false
+      return
+    },
+    handleExceed() {
+      this.$message.error("只能上传一个文件!")
+    },
+    handleRemove(file, fileList) {
+      this.fileList = []
+    },
+    handlePreview(file) {
+      console.log(file)
+    }
+  }
+}
+</script>
+<style lang="less" scoped>
+.boxStyle {
+  width: 100%;
+  height: 32px;
+  line-height: 32px;
+  // background: #f4f5f7;
+  border-left: 3px solid #4f7be2;
+  padding-left: 10px;
+  color: #e6a23c;
+  font-weight: 500;
+}
+.fontStyle {
+  padding-left: 42px;
+  font-size: 20px;
+  font-weight: 600;
+  margin-top: 20px;
+  // font-size: 14px;
+  width: 100%;
+  line-height: 30px;
+  // height: 32px;
+  // padding-bottom: 10px;
+  border-bottom: 1px solid #e5e5f5;
+  margin-bottom: 10px;
+}
+</style>

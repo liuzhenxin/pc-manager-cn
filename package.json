@@ -1,0 +1,49 @@
+{
+  "name": "vue_shop",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "serve": "vue-cli-service serve",
+    "build": "vue-cli-service build",
+    "lint": "vue-cli-service lint"
+  },
+  "dependencies": {
+    "axios": "^0.21.1",
+    "core-js": "^3.39.0",
+    "default-passive-events": "^2.0.0",
+    "docxtemplater": "^3.22.5",
+    "echarts": "^5.3.1",
+    "element-ui": "2.15.6",
+    "esutils": "^2.0.3",
+    "file-saver": "^2.0.5",
+    "fingerprintjs2": "^2.1.4",
+    "jquery": "^3.6.0",
+    "js-md5": "^0.7.3",
+    "jszip-utils": "^0.1.0",
+    "pizzip": "^3.1.1",
+    "qqmap": "^1.0.1",
+    "qs": "^6.13.1",
+    "save": "^2.4.0",
+    "save-dev": "0.0.1-security",
+    "to-fast-properties": "^4.0.0",
+    "vue": "^2.6.11",
+    "vue-fontawesome-elementui-icon-picker": "^0.1.9",
+    "vue-quill-editor": "^3.0.6",
+    "vue-router": "^3.2.0",
+    "vue-table-with-tree-grid": "^0.2.4"
+  },
+  "devDependencies": {
+    "@vue/cli-plugin-babel": "~4.5.0",
+    "@vue/cli-plugin-eslint": "~4.5.0",
+    "@vue/cli-plugin-router": "~4.5.0",
+    "@vue/cli-service": "~4.5.0",
+    "@vue/eslint-config-standard": "^5.1.2",
+    "babel-plugin-component": "^1.1.1",
+    "less": "^3.13.0",
+    "less-loader": "^7.1.0",
+    "vue-cli-plugin-element": "^1.0.1",
+    "vue-print-nb": "^1.7.5",
+    "vue-template-compiler": "^2.6.11"
+  },
+  "packageManager": "yarn@1.22.19+sha1.4ba7fc5c6e704fce2066ecbfb0b0d8976fe62447"
+}

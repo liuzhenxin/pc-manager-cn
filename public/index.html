@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <!-- <link rel="icon" href="<%= BASE_URL %>favicon.ico"> -->
+    <!-- <link rel="icon" href="https://sucai.suoluomei.cn/sucai_zs/images/20200425174801-1.png"> -->
+    <link rel="icon" href="<%= BASE_URL %>stage-api/system/direct/resource/getByCodeIO?page=index&code=2">
+    <title id="title">
+
+    </title>
+    <style>
+        /* .el-popover {
+            width: 150px !important;
+            height: 150px !important;
+            text-align: center !important;
+            padding-top: 10px !important;
+        } */
+
+        .el-popover img {
+            width: 150px !important;
+            height: 150px !important;
+        }
+    </style>
+</head>
+
+<script>
+    var httpRequest = new XMLHttpRequest();//第一步：建立所需的对象
+    console.log("<%= BASE_URL %>")
+    httpRequest.open('GET', "stage-api/system/direct/resource/getByCodeText?page=index&code=1", true);//第二步：打开连接  将请求参数写在url中  ps:"./Ptest.php?name=test&nameone=testone"
+    httpRequest.send();//第三步：发送请求  将请求参数写在URL中
+    // 获取数据后的处理程序
+    httpRequest.onreadystatechange = function () {
+        if (httpRequest.readyState == 4 && httpRequest.status == 200) {
+            document.getElementById("title").innerHTML = httpRequest.responseText;//获取到json字符串，还需解析
+        }
+    };
+
+</script>
+
+<body>
+    <noscript>
+        <strong>We're sorry but <%= htmlWebpackPlugin.options.title %> doesn't work properly without JavaScript enabled.
+                Please enable it to continue.</strong>
+    </noscript>
+    <div id="app"></div>
+    <!-- built files will be auto injected -->
+</body>
+
+
+</html>
