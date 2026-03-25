@@ -1,7 +1,7 @@
 // let URL = "http://10.10.11.99:8080/stage-api/"; //本地地址
 // let URL = "http://10.10.11.30:8080/"; //本地地址
 // let URL = "http://10.10.10.99:8000/stage-api/"; //本地地址
-//let URL = "http://10.10.10.200:8000/stage-api/"; //本地地址
+//let URL = "http://211.88.25.177:8000/stage-api/"; //本地地址
 
 //let URL = "http://10.10.10.136:8000/stage-api/"; //本地地址
 //let URL = "https://10.10.10.136/stage-api/"; //本地地址
@@ -10,7 +10,7 @@
 // let URL = "http://10.10.10.74:8000/stage-api/";
 // let URL = "http://10.10.11.50:8080/";
 
-let URL = "stage-api/"; //本地地址
+let URL = "stage-api/"; //本地址
 
 export default {
   ImageURL: URL,

@@ -61,7 +61,22 @@
                     </el-col>
                 </el-row>
             </el-tab-pane>
-
+            <el-tab-pane label="口令配置" v-loading="passLoading">
+                <el-row :gutter="20">
+                    <el-col :span="16">
+                        <el-form ref="form" label-width="180px">
+                            <el-form-item label="口令操作状态">
+                                <el-button type="success" icon="el-icon-check" circle v-if="passStatus"></el-button>
+                                <el-button type="danger" icon="el-icon-close" circle v-else></el-button>
+                            </el-form-item>
+                            <el-form-item>
+                                <el-button type="primary" size="mini" @click="updPassStatus('1')" :disabled="passStatus">开启口令操作</el-button>
+                                <el-button size="mini" @click="updPassStatus('0')" :disabled="!passStatus">关闭口令操作</el-button>
+                            </el-form-item>
+                        </el-form>
+                    </el-col>
+                </el-row>
+            </el-tab-pane>
 
         </el-tabs>
     </div>
@@ -92,13 +107,52 @@ export default {
             formTraceRouteRes: "",
             loading: false,
             sshStatus: false,
-            sshLoading: false
+            sshLoading: false,
+            passStatus: false,
+            passLoading: false,
+            passId: "49"
         }
     },
     created() {
         this.getNicList()
     },
     methods: {
+        getPassStatus() {
+            this.passLoading = true
+            this.$commonJs
+                .getMethodData(this.$url.ResourceGetById, "POST", {
+                    id: this.passId
+                })
+                .then((res) => {
+                    if (res.data.code == 100000) {
+                        if (res.data.data.content == "1") {
+                            this.passStatus = true
+                        } else {
+                            this.passStatus = false
+                        }
+                    } else if (res.data.code != 800000) {
+                        this.$message.error(res.data.msg)
+                    }
+                    this.passLoading = false
+                })
+        },
+        updPassStatus(type) {
+            this.passLoading = true
+            this.$commonJs
+                .getMethodData(this.$url.ResourceUpd, "POST", {
+                    id: this.passId,
+                    content: type
+                })
+                .then((res) => {
+                    if (res.data.code == 100000) {
+                        this.$message.success("操作成功")
+                        this.getPassStatus()
+                    } else if (res.data.code != 800000) {
+                        this.$message.error(res.data.msg)
+                    }
+                    this.passLoading = false
+                })
+        },
         getSshStatus() {
             this.sshLoading = true
             this.$commonJs
@@ -249,6 +303,9 @@ export default {
             }
             if (tab.label == "SSH") {
                 this.getSshStatus()
+            }
+            if (tab.label == "口令配置") {
+                this.getPassStatus()
             }
         }
     }

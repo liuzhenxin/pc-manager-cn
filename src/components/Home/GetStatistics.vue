@@ -445,6 +445,9 @@ export default {
                         console.log(res, "res")
                         if (code == "7") {
                             this.hardware = res.data.data.content
+                        }else if(code == "4" || code == "5"){
+                          this.displayModel = res.data.data.content
+                          this.equipmentType = res.data.data.position
                         } else {
                             this.displayModel = res.data.data.content
                         }
@@ -1391,6 +1394,7 @@ export default {
                 this.equipmentName = ""
                 this.algorithm = "SM1; SM2; SM3; SM4;"
                 this.getResourceDetail("3")
+
             } else {
                 if (this.$commonJs.getStorage().routeType == "20") {
                     this.routeType = this.$commonJs.getStorage().routeType

@@ -14,7 +14,7 @@
         <div style="padding-top: 10px;" class="loginDiv">
           <el-tabs v-model="activeName" @tab-click="handleClick" class="tabsHeader">
             <el-tab-pane label="证书登录" name="two"></el-tab-pane>
-            <el-tab-pane label="账号登录" name="first" v-if="isShow == 0"></el-tab-pane>
+            <el-tab-pane label="账号登录" name="first" v-if="isShow == 1"></el-tab-pane>
           </el-tabs>
           <!-- 登录表单区域 -->
           <el-form v-loading="loading" ref="loginFormRef" :rules="loginFormRules" :model="loginForm"
