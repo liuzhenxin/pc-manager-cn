@@ -8,7 +8,7 @@
 //let URL1 = "http://10.10.11.112:8111/"; //本地地址
 // let URL = "http://10.10.11.28:8000/stage-api/";
 // let URL = "http://10.10.10.74:8000/stage-api/";
-// let URL = "http://10.10.11.50:8080/";
+// let URL = "http://10.10.11.50:8080";
 
 let URL = "stage-api/"; //本地地址
 

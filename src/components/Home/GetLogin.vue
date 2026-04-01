@@ -60,7 +60,7 @@
         </div>
       </div>
     </div>
-    <div class="copyrightStyle" style="">{{ titleBottom }}</div>
+    <div class="copyrightStyle" style="">{{ titleBottom }} 版本：2.0.1</div>
   </div>
 </template>
 <script src="../../assets/js/jquery1.min.js"></script>

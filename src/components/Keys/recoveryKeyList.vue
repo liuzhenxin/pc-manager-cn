@@ -5,292 +5,248 @@
         <span>(1)请登录半数以上管理员,以满足恢复所需权限</span><br>
         <span>(2)密钥恢复过程会破坏密码设备内当前的密钥数据。请谨慎操作.</span>
       </div>
-      <!-- <keyLogo @keyNum="keyNum"></keyLogo> -->
+
       <el-row style="margin-top:20px;">
         <el-col :span="12">
-          <div style="margin-top:0px;color:#409EFF;border-left: 3px solid #4f7be2" class="boxStyle">读取管理员数: {{readCount}}</div>
+          <div style="margin-top:0px;color:#409EFF;border-left: 3px solid #4f7be2" class="boxStyle">
+            分散管理员数: {{ adminCount }}
+          </div>
+        </el-col>
+        <el-col :span="12">
+          <div style="margin-top:0px;color:#409EFF;border-left: 3px solid #4f7be2" class="boxStyle">
+            恢复需读取密钥数: {{ threshold }}
+          </div>
         </el-col>
       </el-row>
-      <div class="fontStyle" style="margin-bottom:20px;margin-top:20px;"> </div>
-      <el-button style="margin-left:0px;border:0" type="" size="mini">管理员数：</el-button>
-      <el-select v-model="adminCount" placeholder="管理员数目" style="width:5%">
-        <el-option :label="adminCount" :value="adminCount"></el-option>
-      </el-select>
-      <el-button style="margin-left:10px" type="primary" @click="readSharePush()" size="mini" icon="el-icon-key" plain>读取密钥</el-button>
-      <el-upload :disabled=!readOrNot style="margin-top: 20px;margin-left: 10px" class="upload-demo" ref="upload" action="" :show-file-list="true" :on-progress="handleProgress" :on-preview="handlePreview" :on-exceed="handleExceed" :on-change="changeAction" multiple :limit="1" :headers="MyHeader" :file-list="fileList" :auto-upload="false" :on-success="handleSuccess">
-        <el-button :disabled=!readOrNot slot="trigger" size="small" type="success">上传备份文件</el-button>
-        <template #tip>
-          <div v-if="progressVisible">
-            <el-progress :percentage="progressPercent" />
-          </div>
-        </template>
-      </el-upload>
-      <el-button :disabled=!readOrNot style="margin-left: 10px;margin-top: 10px;" size="small" type="primary" @click="addCopyKey">恢复密钥文件</el-button>
 
-      <el-dialog title="读取密钥" :visible.sync="readSharePushDialog" width="30%">
-        <div style="margin-top:20px;padding-left:20%">
-          <span class="titleLabel" style="width:75px">PIN口令:</span>
-          <el-input style="width:60%;margin-left:10px" type="password" v-model="pinContent" placeholder="请输入PIN口令" class="searchInputClass">
-            <!-- <i slot="suffix" :class="[flag1 ? 'el-icon-minus' : 'el-icon-view']" style="margin-top: 8px; font-size: 18px" autocomplete="auto" @click="flag1 = !flag1" ></i> -->
-          </el-input>
-          <!-- <el-button style="margin-left:10px" type="primary" @click="addAdmin()" size="mini"><i class="el-icon-plus iconRight"></i>添加管理员</el-button> -->
-        </div>
-        <span slot="footer" class="dialog-footer">
-                    <el-button @click="readSharePushDialog = false" size="mini">取消</el-button>
-          <!-- <el-button type="success" @click="initFactory('否')" size="medium">否</el-button> -->
-                    <el-button type="primary" @click="readShare()" size="mini">确定</el-button>
-                </span>
-      </el-dialog>
+      <div v-if="step === 1" style="margin-top: 20px;">
+        <h3>第一步：请准备恢复所需的管理员USBKey。</h3>
+        <p>系统检测到总管理员数为 {{ adminCount }}，恢复密钥需要读取其中 {{ threshold }} 个管理员的备份分量。</p>
+        <el-button type="primary" @click="startReading" plain icon="el-icon-key">
+            开始读取密钥
+        </el-button>
+      </div>
+
+      <div v-if="step === 2" style="margin-top: 20px;">
+        <h3>第二步：读取管理员备份分量</h3>
+        <p>请插入第 {{ readCount + 1 }} 个参与恢复的管理员USBKey</p>
+
+        <el-form>
+            <el-form-item label="PIN口令">
+                <el-input type="password" v-model="pinContent" placeholder="请输入PIN口令" style="width: 300px;"></el-input>
+            </el-form-item>
+            <el-form-item>
+                <el-button type="primary" @click="readShare" icon="el-icon-key" plain>
+                    读取第 {{ readCount + 1 }} 个备份分量
+                </el-button>
+            </el-form-item>
+        </el-form>
+        <p>已读取 {{ readCount }} / {{ threshold }}</p>
+      </div>
+
+      <div v-if="step === 3" style="margin-top: 20px;">
+        <h3>第三步：上传备份文件恢复密钥</h3>
+        <p>已成功读取所需的 {{ threshold }} 个备份分量，请上传之前备份的密钥文件以完成恢复。</p>
+
+        <el-upload
+          class="upload-demo"
+          ref="upload"
+          action=""
+          :show-file-list="true"
+          :on-change="changeAction"
+          :on-remove="handleRemove"
+          :on-exceed="handleExceed"
+          multiple
+          :limit="1"
+          :file-list="fileList"
+          :auto-upload="false">
+          <el-button slot="trigger" size="small" type="success" plain>选择备份文件</el-button>
+        </el-upload>
+
+        <el-button style="margin-top: 20px;" size="small" type="primary" @click="addCopyKey" icon="el-icon-upload">
+            恢复密钥
+        </el-button>
+      </div>
+
+      <div v-if="step === 4" style="margin-top: 20px;">
+          <h3>密钥恢复成功。</h3>
+          <el-button type="primary" @click="reset" plain>
+              完成
+          </el-button>
+      </div>
 
     </el-card>
   </div>
 </template>
 
-
 <script>
-import keyLogo from "./keyLogo.vue"
 export default {
   inject: ["reload"],
-  components: {
-    keyLogo
-  },
-
   data() {
     return {
       loading: false,
-      showFile: false,
-      isUpload: true,
-      MyHeader: { Authorization: "" },
-      isLogin: true,
+      step: 1, // 1: start, 2: reading shares, 3: upload file, 4: done
       pinContent: "",
       fileList: [],
-      addminKeyNum: 0,
+      fileStore: null,
       readCount: 0,
-      adminCount: "",
-      readSharePushDialog: false,
-      readOrNot: true,
+      adminCount: 0,
       shares: "",
-      fileStore: "",
-      actionUrl: "",
-      progressVisible: false,
-      progressPercent: 0
     }
   },
-  created() {
-    this.MyHeader.Authorization =
-      window.sessionStorage.getItem("Authorization")
-    this.loading = true
-    setTimeout(() => {
-      this.loading = false
-    }, 1000),
-      this.getEnumUser()
+  computed: {
+      threshold() {
+          if (this.adminCount === 0) return 0;
+          return Math.floor(this.adminCount / 2) + 1;
+      }
   },
-  mounted() {
-    // this.getStatus();
+  created() {
+      this.getEnumUser();
   },
   methods: {
+    reset() {
+        this.step = 1;
+        this.readCount = 0;
+        this.pinContent = "";
+        this.fileList = [];
+        this.fileStore = null;
+        this.shares = "";
+        this.getEnumUser();
+    },
     //获取已登录的管理员数
     getEnumUser() {
-      this.$commonJs.
-      getMethodData(this.$url.GetEnumUser,"Post",{})
+      this.loading = true;
+      this.$commonJs.getMethodData(this.$url.GetEnumUser,"Post",{})
         .then((res)=>{
           if (res.data.code == 100000) {
             this.adminCount = res.data.data.managerRegister;
           }
         })
+        .finally(() => {
+            this.loading = false;
+        });
     },
-    readSharePush() {
-      if (this.readCount == parseInt(this.adminCount / 2 + 1)) {
-        this.$message.success("密钥读取完成，请上传备份文件")
-      } else {
-        this.readSharePushDialog = true
-      }
+    startReading() {
+        if (this.adminCount === 0) {
+            this.$message.error("无法获取管理员数量，请检查系统状态");
+            return;
+        }
+        this.step = 2;
     },
     readShare() {
-      if (this.pinContent == "") {
-        this.$message.success("口令不能为空！")
-      } else {
-        this.loading = true
-        this.$commonJs
-          .getMethodData(this.$url.readShare, "POST", {
-            passwd: this.pinContent,
-            readCount: this.readCount,
-            adminCount: this.adminCount
-          })
-          .then((res) => {
-            this.readSharePushDialog = false
-            if (res.data.code == 100000) {
-              this.shares += res.data.data + ","
-              this.readCount++
-              this.pinContent = ""
-              this.$message.success("读取成功！")
-              if (
-                this.readCount == parseInt(this.adminCount / 2 + 1)
-              ) {
-                this.readOrNot = true
-                this.actionUrl = this.$url.SvsRestoryKey
-              }
-            } else if (res.data.code != 800000) {
-              this.$message.error(res.data.msg)
-            }
-            // this.showFile = false;
-            this.loading = false
-          })
+      if (!this.pinContent) {
+        this.$message.error("口令不能为空！");
+        return;
       }
+
+      this.loading = true;
+      console.log("readshare 参数:", {
+        passwd: this.pinContent,
+        readCount: this.readCount,
+        adminCount: this.adminCount
+      });
+
+      this.$commonJs
+        .getMethodData(this.$url.readShare, "POST", {
+          passwd: this.pinContent,
+          readCount: this.readCount,
+          adminCount: this.adminCount
+        })
+        .then((res) => {
+          console.log("readshare 返回:", res.data);
+          if (res.data.code == 100000) {
+            // 调用 GetShares 接口获取已读取的分片数据
+            return this.$commonJs.getMethodData(this.$url.GetShares, "POST", {});
+          } else {
+            this.$message.error(res.data.msg || "读取失败");
+            this.loading = false;
+            throw new Error("读取失败");
+          }
+        })
+        .then((sharesRes) => {
+          console.log("GetShares 返回:", sharesRes.data);
+          if (sharesRes.data.code == 100000 && sharesRes.data.data) {
+            // 获取到实际的分片数据
+            this.shares = sharesRes.data.data;
+            this.readCount++;
+            this.pinContent = "";
+            this.$message.success(`成功读取第 ${this.readCount} 个备份分量！`);
+
+            if (this.readCount >= this.threshold) {
+              this.step = 3;
+            }
+          } else {
+            this.$message.error("获取分片数据失败");
+          }
+        })
+        .catch(() => {
+            this.$message.error("读取分量请求失败");
+        })
+        .finally(() => {
+            this.loading = false;
+        });
+    },
+    changeAction(file, fileList) {
+      this.fileList = fileList;
+      this.fileStore = fileList.length > 0 ? fileList[0].raw : null;
+    },
+    handleExceed() {
+      this.$message.error("只能上传一个文件!");
+    },
+    handleRemove(file, fileList) {
+      this.fileList = [];
+      this.fileStore = null;
     },
     addCopyKey() {
-      if (this.fileStore == "") {
-        this.$message.success("文件不能为空！")
-      } else {
-        this.loading = true
-        setTimeout(function() {
-          // 这里编写需要等待后执行的代码
-          console.log("等待了5秒后执行的代码");
-        }, 5000); // 等待5秒
-        this.actionUrl = this.$url.SvsRestoryKey
-        console.log(this.actionUrl + "------------")
-        let formdata = new FormData()
-        formdata.append("file", this.fileStore)
-        formdata.append("m", this.adminCount)
-        this.$http
-          .post(this.actionUrl, formdata, {
-            headers: {
-              "Content-Type": "multipart/form-data"
-            }
-          })
-          .then((res) => {
-            if (res.data.code == 100000) {
-              this.$alert("恢复密钥成功.", "提示", {
-                confirmButtonText: "确定",
-                type: "success"
-              }).then(() => {
-                this.reload()
-              })
-            } else if (res.data.code != 800000) {
-              this.$message.error(res.data.msg)
-            }
-            // this.showFile = false;
-            this.loading = false
-          })
+      if (!this.fileStore) {
+        this.$message.error("请先选择备份文件！");
+        return;
       }
-    },
-    handleProgress(event,file){
-      console.log(event)
-      this.progressPercent = event.percent;
-      this.progressVisible = true;
-    },
-    handleSuccess(file) {
-      console.log(file)
-      if (file.code == 100000) {
-        //this.showFile = true
-        // this.isUpload = false;
-        // this.addCopyKey();
-        //this.isNext = 2
-        this.$message.success("上传成功!")
-      } else {
-        this.$nextTick(() => {
-          // this.showFile = false;
-          // this.isUpload = true;
-        })
-        this.fileList = []
-        this.$message.error(file.msg)
+
+      if (!this.shares || this.shares === "") {
+        this.$message.error("请先读取密钥分量！");
+        return;
       }
-    },
-    getRecoveryLogin() {
-      this.$router.push({
-        name: "userLoginList",
-        query: {
-          type: 2
-        }
-      })
-    },
-    keyNum(data) {
-      console.log(data, "keyNum")
-      this.addminKeyNum = data
-      // this.getStatus();
-    },
-    async getStatus() {
-      let that = this
-      await this.$commonJs
-        .getMethodData(this.$url.HsmGetUserinfo, "POST", {
-          num: this.addminKeyNum
+
+      this.loading = true;
+      let formdata = new FormData();
+      formdata.append("file", this.fileStore);
+      formdata.append("m", this.adminCount); // Required by backend
+      formdata.append("shares", this.shares); // Required by backend
+
+      this.$http
+        .post(this.$url.RestoryKey, formdata, {
+          headers: {
+            "Content-Type": "multipart/form-data"
+          }
         })
         .then((res) => {
           if (res.data.code == 100000) {
-            that.isLogin = res.data.data
-            this.loading = false
-          } else if (res.data.code != 800000) {
-            if (res.data.data == false) {
-              that.meetPermissions =
-                "未满足恢复密钥权限，请先登录"
-            }
-            that.$message.error(res.data.msg)
-            this.loading = false
+            this.$message.success("恢复密钥成功");
+            this.step = 4;
           } else {
-            this.loading = false
+            this.$message.error(res.data.msg || "恢复密钥失败");
           }
         })
-    },
-    submitUpload() {
-      this.$refs.upload.submit()
-    },
-    changeAction(file, fileList) {
-      //this.fileStore = file.raw
-      this.fileList = fileList
-      this.fileStore = fileList[0].raw
-    },
-    handleSuccess(file) {
-      console.log(file, "file")
-      // this.$nextTick(() => {
-      //     this.$commonJs.getCloseLoading();
-      // });
-      if (file.code == 100000) {
-        this.$message.success("上传成功!")
-        this.showFile = true
-        this.$router.push("/applicationCertList")
-      }
-      // else {
-      //     this.fileList = [];
-      //     this.$message.error(file.msg);
-      //     this.showFile = false;
-      // }
-      this.loading = false
-      return
-    },
-    handleExceed() {
-      this.$message.error("只能上传一个文件!")
-    },
-    handleRemove(file, fileList) {
-      this.fileList = []
-    },
-    handlePreview(file) {
-      console.log(file)
+        .catch(() => {
+             this.$message.error("恢复密钥请求失败");
+        })
+        .finally(() => {
+             this.loading = false;
+        });
     }
   }
 }
 </script>
+
 <style lang="less" scoped>
 .boxStyle {
   width: 100%;
   height: 32px;
   line-height: 32px;
-  // background: #f4f5f7;
   border-left: 3px solid #4f7be2;
   padding-left: 10px;
   color: #e6a23c;
   font-weight: 500;
-}
-.fontStyle {
-  padding-left: 42px;
-  font-size: 20px;
-  font-weight: 600;
-  margin-top: 20px;
-  // font-size: 14px;
-  width: 100%;
-  line-height: 30px;
-  // height: 32px;
-  // padding-bottom: 10px;
-  border-bottom: 1px solid #e5e5f5;
-  margin-bottom: 10px;
 }
 </style>

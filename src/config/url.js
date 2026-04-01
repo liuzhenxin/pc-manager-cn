@@ -1,16 +1,16 @@
 // let URL = "http://10.10.11.99:8080/stage-api/"; //本地地址
 // let URL = "http://10.10.11.30:8080/"; //本地地址
-// let URL = "http://10.10.10.99:8000/stage-api/"; //本地地址
-//let URL = "http://211.88.25.177:8000/stage-api/"; //本地地址
+// let URL = "http://10.10.10.99:8000/stage-api/"; //本地地
+//let URL = "http://10.10.10.200:8000/stage-api/"; //本地地址
 
 //let URL = "http://10.10.10.136:8000/stage-api/"; //本地地址
 //let URL = "https://10.10.10.136/stage-api/"; //本地地址
 //let URL1 = "http://10.10.11.112:8111/"; //本地地址
 // let URL = "http://10.10.11.28:8000/stage-api/";
 // let URL = "http://10.10.10.74:8000/stage-api/";
-// let URL = "http://10.10.11.50:8080/";
+// let URL = "https://10.10.10.61/stage-api/";
 
-let URL = "stage-api/"; //本地址
+let URL = "stage-api/"; //本地地址
 
 export default {
   ImageURL: URL,
@@ -184,6 +184,7 @@ export default {
   BackKey: URL + "hsm/key/backKey", // 备份密钥
   //SetShare: URL + "hsm/key/writeShare", // ukeyPIN口令
   //GetShare: URL + "hsm/key/readShare", // 获取ukeyPIN口令
+  GetShares: URL + "hsm/key/getShares", // 获取已读取的分片数据
   WriteShare: URL + "hsm/key/writeshare",//分发密钥分片
   readShare: URL+ "hsm/key/readshare",// 获取ukeyPIN口令
   SvsBackKey: URL + "hsm/key/backKeyLiuzx", // 备份密钥
