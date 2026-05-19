@@ -155,19 +155,10 @@ export default {
         .then((res) => {
           console.log("readshare 返回:", res.data);
           if (res.data.code == 100000) {
-            // 调用 GetShares 接口获取已读取的分片数据
-            return this.$commonJs.getMethodData(this.$url.GetShares, "POST", {});
-          } else {
-            this.$message.error(res.data.msg || "读取失败");
-            this.loading = false;
-            throw new Error("读取失败");
-          }
-        })
-        .then((sharesRes) => {
-          console.log("GetShares 返回:", sharesRes.data);
-          if (sharesRes.data.code == 100000 && sharesRes.data.data) {
-            // 获取到实际的分片数据
-            this.shares = sharesRes.data.data;
+            // 直接使用 readshare 返回的分片数据并累加
+            if (res.data.data) {
+                this.shares += res.data.data + ",";
+            }
             this.readCount++;
             this.pinContent = "";
             this.$message.success(`成功读取第 ${this.readCount} 个备份分量！`);
@@ -176,7 +167,7 @@ export default {
               this.step = 3;
             }
           } else {
-            this.$message.error("获取分片数据失败");
+            this.$message.error(res.data.msg || "读取失败");
           }
         })
         .catch(() => {
@@ -215,7 +206,7 @@ export default {
       formdata.append("shares", this.shares); // Required by backend
 
       this.$http
-        .post(this.$url.RestoryKey, formdata, {
+        .post(this.$url.SvsRestoryKey, formdata, {
           headers: {
             "Content-Type": "multipart/form-data"
           }

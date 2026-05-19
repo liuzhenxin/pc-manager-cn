@@ -1,16 +1,14 @@
 // let URL = "http://10.10.11.99:8080/stage-api/"; //本地地址
 // let URL = "http://10.10.11.30:8080/"; //本地地址
-// let URL = "http://10.10.10.99:8000/stage-api/"; //本地地
-//let URL = "http://10.10.10.200:8000/stage-api/"; //本地地址
-
-//let URL = "http://10.10.10.136:8000/stage-api/"; //本地地址
-//let URL = "https://10.10.10.136/stage-api/"; //本地地址
+// let URL = "http://10.10.10.99:8000/stage-api/"; //本地地址
+//let URL = "http://10.10.10.123:8000/stage-api/"; //本地地址
+//let URL = "http://127.0.0.1:8000/stage-api/"; //本地地址
 //let URL1 = "http://10.10.11.112:8111/"; //本地地址
 // let URL = "http://10.10.11.28:8000/stage-api/";
-// let URL = "http://10.10.10.74:8000/stage-api/";
-// let URL = "https://10.10.10.61/stage-api/";
+//let URL = "http://211.88.25.177:8000/stage-api/";
+let URL = "https://10.10.10.129/stage-api/";
 
-let URL = "stage-api/"; //本地地址
+//let URL = "stage-api/"; //本地地址
 
 export default {
   ImageURL: URL,
@@ -182,14 +180,8 @@ export default {
   RestoryKey: URL + "hsm/key/restoryKey", // 恢复密钥
   RestoryKeyFile: URL + "hsm/key/restoryKeyFile", // 恢复内部密钥(文件)
   BackKey: URL + "hsm/key/backKey", // 备份密钥
-  //SetShare: URL + "hsm/key/writeShare", // ukeyPIN口令
-  //GetShare: URL + "hsm/key/readShare", // 获取ukeyPIN口令
-  GetShares: URL + "hsm/key/getShares", // 获取已读取的分片数据
-  WriteShare: URL + "hsm/key/writeshare",//分发密钥分片
-  readShare: URL+ "hsm/key/readshare",// 获取ukeyPIN口令
-  SvsBackKey: URL + "hsm/key/backKeyLiuzx", // 备份密钥
-  SvsRestoryKey: URL+ "hsm/key/SvsrestoryKey", //恢复密钥
-
+  SetShare: URL + "hsm/key/writeShare", // ukeyPIN口令
+  GetShare: URL + "hsm/key/readShare", // 获取ukeyPIN口令
   SetUserPriKeyPIN: URL + "hsm/key/setUserKeyPIN", // 设置私钥访问控制码
   HsmGetLastBackupTime: URL + "hsm/key/lastKeyBackupTime", // 上次备份时间
   EncKeyRequest: URL + "hsm/key/encKeyRequest", // 加密密钥请求
@@ -284,6 +276,8 @@ export default {
   GetIpByNic: URL + "info/ip/getIpByNic", // 根据网卡名查询
   ModifyIP: URL + "info/ip/modifyIP", // 根据网卡名修改
   ShowNic: URL + "info/ip/showNic", // 网卡列表
+  HotBackup: URL+"info/ip/hotBackup",//热备配置
+  getConfig: URL+"info/ip/getcurrentconfig",//获取当前热备配置信息
 
   // 时间源
   GetSystemTime: URL + "info/ntp/getSystemTime", // 获取系统时间
@@ -299,7 +293,7 @@ export default {
   SysReboot: URL + "info/os/sysReboot", // 重启
   SysGetSshStatus: URL + "info/os/getSshStatus", // 获取ssh服务状态
   SysStartSsh: URL + "info/os/startSsh", // 启动ssh服务
-  SysStopSsh: URL + "info/os/stopSsh", // 启动ssh服务
+  SysStopSsh: URL + "info/os/stopSsh", // 停止ssh服务
 
   //   白名单
   GetAddWhiteList: URL + "system/ipAddress/add", // 添加白名单
@@ -318,6 +312,8 @@ export default {
   GetRestart: URL + "svs/netty/restart", // // 签名验签是否重启(TCP)
   UpdPortTCP: URL + "svs/netty/updPort", // 修改端口(TCP)
   SyncDataBase: URL + "svs/direct/syncDataBase/syncAll", // 同步数据库-同步全部
+
+
 
   OpenPort: URL + "info/ip/openPort", //开启防火墙
   ClosePort: URL + "info/ip/closePort", //关闭防火墙
@@ -357,6 +353,10 @@ export default {
   GetDictionaryUpd: URL + "system/dictionary/upd", // 数据字典修改
   GetDictionaryAdd: URL + "system/dictionary/add", // 数据字典新增
   GetinitHsm: URL + "system/three_type/initHsm", // 初始化一体机
+
+  CertificateState: URL + "system/resource/getById",//查询证书认证状态
+  Modifycertificate: URL + "system/resource/updcontent",//修改证书认证状态
+
 
   // 证书颁发机构
   GetrCertList: URL + "svs/cert/allCaCertTree", // 证书颁发机构列表
@@ -429,7 +429,11 @@ export default {
   GetSymmetricKeyById: URL + "svs/symmetric/getAppById", // 详情
   GetSymmetricKeyList: URL + "svs/symmetric/getList", // 列表查询
 
+  WriteShare: URL + "svs/key/writeshare",//分发密钥分片
+  readShare: URL+ "svs/key/readshare",// 获取ukeyPIN口令
 
+  SvsRestoryKey: URL + "svs/key/restoryKey", // 恢复密钥
+  SvsBackKey: URL + "svs/key/backKey", // 备份密钥
 
   // 用户管理
   GetAddSvsUser: URL + "svs/user/addUser", // 新增
@@ -616,4 +620,3 @@ export default {
   CAAddOcsp: URL + "ca/ocsp/addOcsp", // 新增ocsp
   CAGetOcspUrlById: URL + "ca/ocsp/getOcspUrlBySN" // 获取详情
 };
-

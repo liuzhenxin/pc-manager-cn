@@ -25,7 +25,7 @@ import ipConfig from "../components/ip/ipConfig.vue"; // 网卡配置
 import ipDiagnose from "../components/ip/ipDiagnose.vue"; // 网络诊断
 import initInstallList from "../components/initInstall/initInstallList.vue"; // 安装向导
 import initUserList from "../components/initInstall/initUserList.vue"; // 初始化管理员列表显示插件
-import symmetricKeyList from "../components/Keys/symmetricKeyList.vue"; // 对称密钥管理
+import symmetricKeyList from "../components/symmetric/symmetricKeyList"; // 对称密钥管理
 import quantumKeyList from "../components/Keys/quantumKeyList.vue"; // 量子密钥管理
 import RSAkeyList from "../components/Keys/RSAkeyList.vue"; // RSA密钥管理
 import SM2KeyList from "../components/Keys/SM2KeyList.vue"; // SM2密钥管理
@@ -63,6 +63,7 @@ import issuanceList from "../components/issuance/issuanceList.vue"; // 证书颁
 import configCRL from "../components/issuance/configCRL.vue"; // 配置CRL验证
 import verificationList from "../components/issuance/verificationList.vue"; // 签名验签服务
 import managementList from "../components/management/managementList.vue"; // 应用管理
+import svssymmetricKeyList from "../components/symmetric/symmetricKeyList.vue"; // 对称密钥管理[签名服务器使用】
 import managementDetail from "../components/management/managementDetail.vue"; // 应用管理详情
 import applicationCertList from "../components/ApplicationCert/applicationCertList.vue"; // 应用证书管理
 import applicationCertDetail from "../components/ApplicationCert/applicationCertDetail.vue"; // 应用证书管理详情
@@ -417,9 +418,9 @@ const router = new Router({
           // }
         },
         {
-          name: "symmetricKeyList",
-          path: "/symmetricKeyList",
-          component: symmetricKeyList,
+          name: "svsSymmetricKeyList",
+          path: "/svsSymmetricKeyList",
+          component: svssymmetricKeyList,
           meta: {
             keepalive: true,
             breadcrumb: ["密钥管理", "对称密钥管理"]

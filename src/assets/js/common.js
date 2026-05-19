@@ -29,9 +29,13 @@ const common = {
         url: url,
         method: method,
         params: data
-      }).then(res => {
-        resolve(res);
-      });
+      })
+        .then(res => {
+          resolve(res);
+        })
+        .catch(err => {
+          reject(err);
+        });
     });
     return response;
   },
@@ -41,9 +45,13 @@ const common = {
         url: url.SetAioStep,
         method: "post",
         params: { step: data }
-      }).then(res => {
-        resolve(res);
-      });
+      })
+        .then(res => {
+          resolve(res);
+        })
+        .catch(err => {
+          reject(err);
+        });
     });
     return response;
   },
@@ -54,29 +62,36 @@ const common = {
         url: url.GetOrganizationList,
         method: "post",
         params: {}
-      }).then(res => {
-        if (res.data.code == 100000) {
-          function getOrgData(data, newArr) {
-            data.map((item, index) => {
-              newArr.push({
-                value: item.id,
-                label: item.name
+      })
+        .then(res => {
+          if (res.data.code == 100000) {
+            function getOrgData(data, newArr) {
+              data.map((item, index) => {
+                newArr.push({
+                  value: item.id,
+                  label: item.name
+                });
+                if (item.children.length != 0) {
+                  newArr[index].children = [];
+                  getOrgData(item.children, newArr[index].children);
+                }
               });
-              if (item.children.length != 0) {
-                newArr[index].children = [];
-                getOrgData(item.children, newArr[index].children);
-              }
-            });
-            return newArr;
+              return newArr;
+            }
+
+            let data = getOrgData(res.data.data, []);
+
+            resolve(data);
+          } else if (res.data.code != 800000) {
+            Message.error(res.data.msg);
+            resolve([]); // Still resolve with empty array to avoid hanging if code is not 100000
+          } else {
+            resolve([]);
           }
-
-          let data = getOrgData(res.data.data, []);
-
-          resolve(data);
-        } else if (res.data.code != 800000) {
-          Message.error(res.data.msg);
-        }
-      });
+        })
+        .catch(err => {
+          reject(err);
+        });
     });
     return response;
   },
@@ -110,20 +125,27 @@ const common = {
         url: url.DataAll,
         method: "POST",
         params: { dictionary_code: data }
-      }).then(res => {
-        if (res.data.code == 100000) {
-          let newArr = [];
-          res.data.data.forEach((item, index) => {
-            newArr.push({
-              label: item.name,
-              value: item.val
+      })
+        .then(res => {
+          if (res.data.code == 100000) {
+            let newArr = [];
+            res.data.data.forEach((item, index) => {
+              newArr.push({
+                label: item.name,
+                value: item.val
+              });
             });
-          });
-          resolve(newArr);
-        } else if (res.data.code != 800000) {
-          Message.error(res.data.msg);
-        }
-      });
+            resolve(newArr);
+          } else if (res.data.code != 800000) {
+            Message.error(res.data.msg);
+            resolve([]);
+          } else {
+            resolve([]);
+          }
+        })
+        .catch(err => {
+          reject(err);
+        });
     });
     return response;
   },
@@ -134,29 +156,36 @@ const common = {
         url: url.GetUserIdRole,
         method: "post",
         params: { user_id: userId, system_type: systemType }
-      }).then(res => {
-        if (res.data.code == 100000) {
-          let dataList = res.data.attrs.roles;
-          let roleAllList = [];
-          for (var i = 0; i < dataList.length; i++) {
-            let userRoleObj = {};
-            userRoleObj["label"] = dataList[i].name;
-            userRoleObj["value"] = dataList[i].id;
-            roleAllList.push(userRoleObj);
+      })
+        .then(res => {
+          if (res.data.code == 100000) {
+            let dataList = res.data.attrs.roles;
+            let roleAllList = [];
+            for (var i = 0; i < dataList.length; i++) {
+              let userRoleObj = {};
+              userRoleObj["label"] = dataList[i].name;
+              userRoleObj["value"] = dataList[i].id;
+              roleAllList.push(userRoleObj);
+            }
+            let roleId = "";
+            if (res.data.data.length != 0) {
+              roleId = res.data.data[0].role_id;
+            }
+            resolve({
+              userRole: roleId,
+              roleAllList: roleAllList,
+              roleList: dataList
+            });
+          } else if (res.data.code != 800000) {
+            Message.error(res.data.msg);
+            reject(res.data.msg);
+          } else {
+            reject("Unknown error");
           }
-          let roleId = "";
-          if (res.data.data.length != 0) {
-            roleId = res.data.data[0].role_id;
-          }
-          resolve({
-            userRole: roleId,
-            roleAllList: roleAllList,
-            roleList: dataList
-          });
-        } else if (res.data.code != 800000) {
-          Message.error(res.data.msg);
-        }
-      });
+        })
+        .catch(err => {
+          reject(err);
+        });
     });
     return response;
   },
@@ -169,9 +198,13 @@ const common = {
         method: method,
         params: data,
         responseType: "blob"
-      }).then(res => {
-        resolve(res);
-      });
+      })
+        .then(res => {
+          resolve(res);
+        })
+        .catch(err => {
+          reject(err);
+        });
     });
     return response;
   },
@@ -182,9 +215,13 @@ const common = {
         url: url.CheckNotAfter,
         method: "post",
         params: data
-      }).then(res => {
-        resolve(res);
-      });
+      })
+        .then(res => {
+          resolve(res);
+        })
+        .catch(err => {
+          reject(err);
+        });
     });
     return response;
   },
