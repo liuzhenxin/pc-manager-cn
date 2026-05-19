@@ -96,7 +96,7 @@ export default {
             this.$commonJs.getMethodData(this.$url.HsmGetLastBackupTime, "POST", {})
                 .then((res) => {
                     if (res.data.code == 100000) {
-                        this.copyTime = res.data.data;
+                        this.copyTime = res.data.data || "N/A";
                     }
                 });
         },
@@ -140,6 +140,7 @@ export default {
                 window.URL.revokeObjectURL(link.href);
 
                 this.$message.success('备份文件下载成功，请开始写入备份分量');
+                this.getLastBackupTime();
                 this.step = 2;
             })
             .catch((error) => {
@@ -163,6 +164,7 @@ export default {
                         this.writeCount++;
                         this.pinContent = "";
                         if (this.writeCount >= this.adminCount) {
+                            this.getLastBackupTime();
                             this.step = 3;
                         }
                     } else {

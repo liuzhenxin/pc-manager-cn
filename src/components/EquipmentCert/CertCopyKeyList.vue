@@ -75,7 +75,7 @@ export default {
             addminKeyNum: 0,
             isNext: 1,
             adminNum: 1,
-            copyTime: "2022.03.27 12:23"
+            copyTime: "N/A"
         };
     },
     created() {
@@ -93,7 +93,7 @@ export default {
                 .getMethodData(this.$url.HsmGetLastBackupTime, "POST", {})
                 .then((res) => {
                     if (res.data.code == 100000) {
-                        this.copyTime = res.data.data;
+                        this.copyTime = res.data.data || "N/A";
                     } else if (res.data.code != 800000) {
                         // this.copyTime = " ";
                         // this.$message.error(res.data.msg);
@@ -239,6 +239,7 @@ export default {
 
                     if (res.data.code == 100000) {
                         this.isDisabled = false;
+                        this.getTime();
 
                         this.$alert("产生备份文件成功.", "提示", {
                             confirmButtonText: "确定",
