@@ -115,7 +115,7 @@ export default {
             const params = new URLSearchParams();
             params.append('num', this.adminCount);
 
-            axios.post(this.$url.BackKey, params, {
+            axios.post(this.$url.SvsBackKey, params, {
                 responseType: 'blob',
                 headers: {
                     'Content-Type': 'application/x-www-form-urlencoded'
@@ -141,6 +141,7 @@ export default {
 
                 this.$message.success('备份文件下载成功，请开始写入备份分量');
                 this.step = 2;
+                this.getLastBackupTime();
             })
             .catch((error) => {
                 this.$message.error(`备份失败: ${error.message}`);
