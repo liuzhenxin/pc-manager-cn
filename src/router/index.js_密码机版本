@@ -31,6 +31,7 @@ import RSAkeyList from "../components/Keys/RSAkeyList.vue"; // RSA密钥管理
 import SM2KeyList from "../components/Keys/SM2KeyList.vue"; // SM2密钥管理
 import EDDSAKeyList from "../components/Keys/EDDSAKeyList.vue"; // EDDSA密钥管理
 import ECDSAKeyList from "../components/Keys/ECDSAKeyList.vue"; // ECDSA密钥管理
+import MLDSAKeyList from "../components/Keys/MLDSAKeyList.vue"; // ML-DSA密钥管理
 import SM9ParentKeyList from "../components/Keys/SM9ParentKeyList.vue"; // SM9主密钥管理
 import SM9ChildKeyList from "../components/Keys/SM9ChildKeyList.vue"; // SM9子密钥管理
 import DSAKeyList from "../components/Keys/DSAKeyList.vue"; // DSA密钥管理
@@ -468,6 +469,15 @@ const router = new Router({
           meta: {
             keepalive: true,
             breadcrumb: ["密钥管理", "ECDSA密钥管理"]
+          }
+        },
+        {
+          name: "MLDSAKeyList",
+          path: "/MLDSAKeyList",
+          component: MLDSAKeyList,
+          meta: {
+            keepalive: true,
+            breadcrumb: ["密钥管理", "ML-DSA密钥管理"]
           }
         },
         {

@@ -1332,7 +1332,7 @@ export default {
                             if (this.$commonJs.getStorage().routeType == "20") {
                                 this.algorithm =
                                     // "SM3_SM2, SHA1_RSA, SHA256_RSA";
-                                    "SM1; SM2; SM3; SM4;"
+                                    "SM1; SM2; SM3; SM4; ML-DSA;"
                             }
                         }
                     })
@@ -1392,7 +1392,7 @@ export default {
                 this.displayModel = "DYSX-AIO"
                 this.equipmentType = "密码服务一体机"
                 this.equipmentName = ""
-                this.algorithm = "SM1; SM2; SM3; SM4;"
+                this.algorithm = "SM1; SM2; SM3; SM4; ML-DSA;"
                 this.getResourceDetail("3")
 
             } else {
@@ -1402,7 +1402,7 @@ export default {
                     this.displayModel = "DYSX-SVS02"
                     this.equipmentName = ""
                     // this.algorithm = "SM3_SM2,SHA1_RSA,SHA256_RSA";
-                    this.algorithm = "SM1; SM2; SM3; SM4;"
+                    this.algorithm = "SM1; SM2; SM3; SM4; ML-DSA;"
                     this.getResourceDetail("5")
                 }
                 if (this.$commonJs.getStorage().routeType == "30") {
@@ -1411,7 +1411,7 @@ export default {
                     this.displayModel = "DYSX-CA02"
                     this.equipmentName = ""
                     // this.algorithm = "SM3_SM2,SHA1_RSA,SHA256_RSA";
-                    this.algorithm = "SM1; SM2; SM3; SM4;"
+                    this.algorithm = "SM1; SM2; SM3; SM4; ML-DSA;"
                     this.getResourceDetail("6")
                 }
             }

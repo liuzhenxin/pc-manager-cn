@@ -732,6 +732,18 @@ export default {
                 {
                     label: "SM3WithSM2",
                     value: "SM3WithSM2"
+                },
+                {
+                    label: "MLDSA-44",
+                    value: "MLDSA_44"
+                },
+                {
+                    label: "MLDSA-65",
+                    value: "MLDSA_65"
+                },
+                {
+                    label: "MLDSA-87",
+                    value: "MLDSA_87"
                 }
             ],
             signerList: [],
@@ -763,6 +775,7 @@ export default {
             ischeckList: [],
             isQianMing: false,
             keyUrl: "",
+            keyType: "",
             isRSA: "",
             keyType1: "",
             keyType2: "",
@@ -1166,12 +1179,27 @@ export default {
             //     // encrypt 加密
             //     this.isQianMing = false;
             // }
+            const alg = this.form.key_algorithm || this.formMake.key_algorithm
             if (
+                alg == "MLDSA_44" ||
+                alg == "MLDSA_65" ||
+                alg == "MLDSA_87"
+            ) {
+                // ML-DSA
+                this.keyUrl = this.$url.GetKeyStateByType
+                this.keyType = "mldsa"
+                this.$commonJs.deviceConfGet().then((res) => {
+                    this.total = res.data.data.mldsa_num || res.data.data.mldsa_key_count || 0
+                })
+                this.isRSA = false
+                this.pageSize = 10
+            } else if (
                 this.form.key_algorithm == "SM3WithSM2" ||
                 this.formMake.key_algorithm == "SM3WithSM2"
             ) {
                 // SM2
                 this.keyUrl = this.$url.GetSM2KeyState
+                this.keyType = ""
                 // this.$commonJs.deviceConfGet().then((res) => {
                 //     this.total = res.data.data.sm2_key_count;
                 // });
@@ -1180,6 +1208,7 @@ export default {
             } else {
                 // RSA
                 this.keyUrl = this.$url.GetRSAKeyState
+                this.keyType = ""
                 this.isRSA = true
                 // this.$commonJs.deviceConfGet().then((res) => {
                 //     this.total = res.data.data.rsa_key_count;
@@ -1206,7 +1235,8 @@ export default {
                 .getMethodData(this.keyUrl, "POST", {
                     // keynum *密钥个数
                     keyNum: this.pageSize,
-                    pageNum: this.pageNow
+                    pageNum: this.pageNow,
+                    type: this.keyType
                 })
                 .then((res) => {
                     if (res.data.code == 100000) {

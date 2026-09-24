@@ -175,6 +175,18 @@ export default {
                 {
                     label: "RSA",
                     value: "rsa"
+                },
+                {
+                    label: "MLDSA-44",
+                    value: "mldsa_44"
+                },
+                {
+                    label: "MLDSA-65",
+                    value: "mldsa_65"
+                },
+                {
+                    label: "MLDSA-87",
+                    value: "mldsa_87"
                 }
             ],
             loading: false,

@@ -60,7 +60,7 @@
         </div>
       </div>
     </div>
-    <div class="copyrightStyle" style="">{{ titleBottom }} 版本：2.0.1</div>
+    <div class="copyrightStyle" style="">{{ titleBottom }} 版本：{{ version }}</div>
   </div>
 </template>
 <script src="../../assets/js/jquery1.min.js"></script>
@@ -149,6 +149,7 @@ export default {
       id_p1_signdata: "", // 签名值
       titleHead: "",
       titleBottom: "",
+      version: "1.0",
       htmString1: "",
       htmString2: "",
       mainTitleStyle: {
@@ -195,6 +196,7 @@ export default {
     this.getResourceDetail("11")
     this.getResourceDetail("12")
     this.getResourceDetail("13")
+    this.getResourceDetail("14")
     if (this.imageUrl1.startsWith("http://")) {
       this.banner1 = 'url("' + this.imageUrl1 + '")'
       this.banner2 = 'url("' + this.imageUrl2 + '")'
@@ -279,10 +281,16 @@ export default {
         .then((res) => {
           if (res.data.code == 100000) {
             console.log(res, "res")
+            if (!res.data.data) {
+              this.loading = false
+              return
+            }
             if (code == "1") {
               this.titleHead = res.data.data.content
             } else if (code == "2") {
               this.titleBottom = res.data.data.content
+            } else if (code == "14") {
+              this.version = res.data.data.content || this.version
             } else if (code == "5") {
               this.htmString1 = res.data.data.style
             } else if (code == "6") {

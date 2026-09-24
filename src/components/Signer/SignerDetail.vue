@@ -149,6 +149,18 @@ export default {
                 {
                     value: "1.2.840.113549.1.1.11",
                     label: "SHA256WithRSA"
+                },
+                {
+                    value: "2.16.840.1.101.3.4.3.17",
+                    label: "MLDSA-44"
+                },
+                {
+                    value: "2.16.840.1.101.3.4.3.18",
+                    label: "MLDSA-65"
+                },
+                {
+                    value: "2.16.840.1.101.3.4.3.19",
+                    label: "MLDSA-87"
                 }
             ],
             organizationId: 0

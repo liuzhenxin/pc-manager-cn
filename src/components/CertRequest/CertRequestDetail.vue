@@ -309,6 +309,18 @@ export default {
                 {
                     label: "SM3WithSM2",
                     value: "SM3WithSM2"
+                },
+                {
+                    label: "MLDSA-44",
+                    value: "MLDSA_44"
+                },
+                {
+                    label: "MLDSA-65",
+                    value: "MLDSA_65"
+                },
+                {
+                    label: "MLDSA-87",
+                    value: "MLDSA_87"
                 }
             ]
         }
@@ -845,12 +857,20 @@ export default {
         getKeyList() {
             this.loading = true
             this.keyList = []
+            let url = this.$url.GetSM2KeyState
+            let params = {
+                // keynum *密钥个数
+                keyNum: this.pageSize,
+                pageNum: this.pageNow
+            }
+            if (this.formCRL.key_algorithm == "MLDSA_44" ||
+                this.formCRL.key_algorithm == "MLDSA_65" ||
+                this.formCRL.key_algorithm == "MLDSA_87") {
+                url = this.$url.GetKeyStateByType
+                params.type = "mldsa"
+            }
             this.$commonJs
-                .getMethodData(this.$url.GetSM2KeyState, "POST", {
-                    // keynum *密钥个数
-                    keyNum: this.pageSize,
-                    pageNum: this.pageNow
-                })
+                .getMethodData(url, "POST", params)
                 .then((res) => {
                     if (res.data.code == 100000) {
                         this.keyList = res.data.data

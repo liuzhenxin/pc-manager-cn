@@ -348,6 +348,9 @@ export default {
             typeObj2: { label: "", value: "" },
             typeObj3: { label: "", value: "" },
             typeObj4: { label: "", value: "" },
+            typeObj5: { label: "", value: "" },
+            typeObj6: { label: "", value: "" },
+            typeObj7: { label: "", value: "" },
             formKey: {
                 signature_name: "", // 签名证书名字
                 encrypt_name: "", // 加密证书名字
@@ -463,6 +466,21 @@ export default {
                                 this.typeObj4.label = "SM9"
                                 this.typeObj4.value = "SM9"
                                 this.keyTypeList.push(this.typeObj4)
+                            }
+                            if (number[4] == 1) {
+                                this.typeObj5.label = "MLDSA-44"
+                                this.typeObj5.value = "MLDSA_44"
+                                this.keyTypeList.push(this.typeObj5)
+                            }
+                            if (number[5] == 1) {
+                                this.typeObj6.label = "MLDSA-65"
+                                this.typeObj6.value = "MLDSA_65"
+                                this.keyTypeList.push(this.typeObj6)
+                            }
+                            if (number[6] == 1) {
+                                this.typeObj7.label = "MLDSA-87"
+                                this.typeObj7.value = "MLDSA_87"
+                                this.keyTypeList.push(this.typeObj7)
                             }
                         } else {
                             if (res.data.data.content == 0) {

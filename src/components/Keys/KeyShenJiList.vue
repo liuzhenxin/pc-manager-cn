@@ -31,6 +31,7 @@
                         <span v-if="scope.row.alg == 'sm2'">SM2</span>
                         <span v-else-if="scope.row.alg=='rsa'">RSA</span>
                         <span v-else-if="scope.row.alg=='all'">ALL</span>
+                        <span v-else-if="scope.row.alg=='mldsa'">ML-DSA</span>
                         <span v-else>KEK</span>
                     </template>
                 </el-table-column>

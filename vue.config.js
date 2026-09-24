@@ -1,5 +1,6 @@
 module.exports = {
   lintOnSave: false, // 禁用ESlint
+  productionSourceMap: false,
   devServer: {
     port: 8080,
     host: '0.0.0.0',

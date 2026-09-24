@@ -738,6 +738,9 @@ export default {
             typeObj2: { label: "", value: "" },
             typeObj3: { label: "", value: "" },
             typeObj4: { label: "", value: "" },
+            typeObj5: { label: "", value: "" },
+            typeObj6: { label: "", value: "" },
+            typeObj7: { label: "", value: "" },
             formKey: {
                 signature_name: "", // 签名证书名字
                 encrypt_name: "", // 加密证书名字
@@ -764,6 +767,7 @@ export default {
             ischeckList: [],
             isQianMing: false,
             keyUrl: "",
+            keyType: "",
             isRSA: "",
             keyType1: "",
             keyType2: "",
@@ -859,6 +863,21 @@ export default {
                                 this.typeObj4.label = "SM9"
                                 this.typeObj4.value = "SM9"
                                 this.keyTypeList.push(this.typeObj4)
+                            }
+                            if (number[4] == 1) {
+                                this.typeObj5.label = "MLDSA-44"
+                                this.typeObj5.value = "MLDSA_44"
+                                this.keyTypeList.push(this.typeObj5)
+                            }
+                            if (number[5] == 1) {
+                                this.typeObj6.label = "MLDSA-65"
+                                this.typeObj6.value = "MLDSA_65"
+                                this.keyTypeList.push(this.typeObj6)
+                            }
+                            if (number[6] == 1) {
+                                this.typeObj7.label = "MLDSA-87"
+                                this.typeObj7.value = "MLDSA_87"
+                                this.keyTypeList.push(this.typeObj7)
                             }
                         } else {
                             if (res.data.data.content == 0) {
@@ -1190,9 +1209,21 @@ export default {
             //     // encrypt 加密
             //     this.isQianMing = false;
             // }
-            if (this.form.key_algorithm == "sm3_sm2") {
+            if (this.form.key_algorithm == "MLDSA_44" ||
+                this.form.key_algorithm == "MLDSA_65" ||
+                this.form.key_algorithm == "MLDSA_87") {
+                // ML-DSA
+                this.keyUrl = this.$url.GetKeyStateByType
+                this.keyType = "mldsa"
+                this.$commonJs.deviceConfGet().then((res) => {
+                    this.total = res.data.data.mldsa_num || res.data.data.mldsa_key_count || 0
+                })
+                this.isRSA = false
+                this.pageSize = 10
+            } else if (this.form.key_algorithm == "sm3_sm2") {
                 // SM2
                 this.keyUrl = this.$url.GetSM2KeyState
+                this.keyType = ""
                 this.$commonJs.deviceConfGet().then((res) => {
                     this.total = res.data.data.sm2_key_count
                 })
@@ -1201,6 +1232,7 @@ export default {
             } else {
                 // RSA
                 this.keyUrl = this.$url.GetRSAKeyState
+                this.keyType = ""
                 this.isRSA = true
                 this.$commonJs.deviceConfGet().then((res) => {
                     this.total = res.data.data.rsa_key_count
@@ -1227,7 +1259,8 @@ export default {
                 .getMethodData(this.keyUrl, "POST", {
                     // keynum *密钥个数
                     keyNum: this.pageSize,
-                    pageNum: this.pageNow
+                    pageNum: this.pageNow,
+                    type: this.keyType
                 })
                 .then((res) => {
                     if (res.data.code == 100000) {
